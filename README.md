@@ -68,6 +68,8 @@ liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4
 
 ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 3.69MB    
 
+Total Time: 2.69 s
+
 ```
 
 ### Example 4 - download a target file by specifying the url
@@ -78,6 +80,8 @@ liwz11@ubuntu:~/overleaf$ python3 overleaf.py --url "https://www.overleaf.com/do
 [+] downloading the target file...
 
 ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 3.79MB    
+
+Total Time: 2.51 s
 
 ```
 

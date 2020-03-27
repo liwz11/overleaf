@@ -180,13 +180,15 @@ class OverleafClient(object):
             with open('output.' + down_filetype, 'wb') as f:
                 count = 0
                 nbyte = 0
+                t1 = time.time()
                 for chunk in r:
                     f.write(chunk)
                     
                     count += 1
                     nbyte += len(chunk)
                     print('\r' + '▇' * round(math.log(count,2)) + " " + str(round(nbyte/1048576,2)) + 'MB    ', end="")
-        print('\n')
+                t2 = time.time()
+                print('\n\nTotal Time:', round(t2 - t1, 2), 's\n')
 
         r.close()
 
