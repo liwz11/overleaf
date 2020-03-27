@@ -240,7 +240,9 @@ if __name__ == '__main__':
                 print(doc['_id'], doc['name'])
         print('\n')
         os._exit(0)
+    
+    if down_filetype != 'zip':
+        client.compile(project_id, document_id)
 
-    client.compile(project_id, document_id)
     client.download(project_id, down_filetype)
 
