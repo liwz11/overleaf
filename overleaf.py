@@ -104,7 +104,7 @@ class OverleafClient(object):
         websocket.enableTrace(True)
         #ws = websocket.WebSocketApp(url, on_message=on_message, on_error=on_error, on_close=on_close)
         #ws.run_forever()
-        ws = websocket.WebSocket(sslopt={"cert_reqs": ssl.CERT_NONE})
+        ws = websocket.WebSocket(header=self.headers, cookie=self.cookies)
         ws.connect(url)
         ws.send('hello')
         time.sleep(1)
