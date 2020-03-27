@@ -2,7 +2,7 @@
 # Author: liwz11
 
 
-import os, re, time, math, getpass, json, pickle
+import os, sys, re, time, math, getpass, json, pickle
 import requests, websocket
 
 from bs4 import BeautifulSoup
@@ -10,14 +10,14 @@ from argparse import ArgumentParser
 
 
 class OverleafClient(object):
-    def __init__(self):
-        self.homepage = 'https://www.overleaf.com'
-        self.project_url = self.homepage + '/project'
-        self.headers = {
+    homepage = 'https://www.overleaf.com'
+    headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
             }
-        self.cookies_file = '.ov.cookies.cache'
-        self.csrf_file = '.ov.csrf.cache'
+    cookies_file = '.ov.cookies.cache'
+    csrf_file = '.ov.csrf.cache'
+
+    def __init__(self):
         try:
             self._load_session()
         except (FileNotFoundError, EOFError, TypeError):
@@ -25,6 +25,7 @@ class OverleafClient(object):
             self.csrf_token = ''
 
         if 'overleaf_session2' not in self.cookies.keys() or self.csrf_token == '':
+            print('[+] login\n')
             self.login(input('Email: '), getpass.getpass())
             self._dump_session()
 
@@ -43,13 +44,18 @@ class OverleafClient(object):
         with open(self.csrf_file, 'w') as f:
             f.write(self.csrf_token)
 
-    def logout(self):
-        os.remove(self.cookies_file)
-        os.remove(self.csrf_file)
+    @staticmethod
+    def logout():
+        try:
+            os.remove(OverleafClient.cookies_file)
+            os.remove(OverleafClient.csrf_file)
+        except (FileNotFoundError):
+            pass
+        
         print("Logout!\n")
 
     def login(self, email, password):
-        print('[+] login\n')
+        print('')
 
         url = self.homepage + '/login'
         signin_get = requests.get(url, headers=self.headers)
@@ -211,13 +217,14 @@ if __name__ == '__main__':
     down_filetype = args.down
     down_url = args.url
 
-    client = OverleafClient()
     print('')
 
     if logout:
-        client.logout()
+        OverleafClient.logout()
         os._exit(0)
     
+    client = OverleafClient()
+
     if down_url != '':
         client.download('', '', url=down_url)
         os._exit(0)
