@@ -64,7 +64,7 @@ liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4
 
 [+] compiling the project...
 
-[+] downloading the target file...
+[+] downloading the target file to ./output.pdf
 
 ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 3.69MB    
 
@@ -77,7 +77,7 @@ Total Time: 2.69 s
 ```
 liwz11@ubuntu:~/overleaf$ python3 overleaf.py --url "https://www.overleaf.com/download/project/5e60cbcf1afbd8000150aec4/build/1711dbeca03-dbd3e44a305f01b0/output/output.pdf?compileGroup=standard&clsiserverid=clsi-pre-emp-n1-b-2565&popupDownload=true"
 
-[+] downloading the target file...
+[+] downloading the target file to ./output.pdf
 
 ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 3.79MB    
 
