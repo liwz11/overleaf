@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 # Author: liwz11
-
+# Acknowledgement: The OverleafClient class contains code from Gabriel Pelouze’s overleaf_backup tool (https://github.com/gpelouze/overleaf_backup), which was adapted to work with Overleaf v2.
 
 import os, sys, re, time, math, getpass, json, pickle
 import requests, websocket
@@ -23,7 +23,7 @@ class OverleafClient(object):
         except (FileNotFoundError, EOFError, TypeError):
             self.cookies = requests.cookies.RequestsCookieJar()
             self.csrf_token = ''
-
+0
         if 'overleaf_session2' not in self.cookies.keys() or self.csrf_token == '':
             print('[+] login\n')
             self.login(input('Email: '), getpass.getpass())
@@ -254,4 +254,5 @@ if __name__ == '__main__':
         client.compile(project_id, document_id)
 
     client.download(project_id, down_filetype)
+    
 

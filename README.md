@@ -85,4 +85,8 @@ Total Time: 2.51 s
 
 ```
 
+### Acknowledgements
+
+The OverleafClient class contains code from Gabriel Pelouze’s overleaf_backup tool (https://github.com/gpelouze/overleaf_backup), which was adapted to work with Overleaf v2.
+
 
