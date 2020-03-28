@@ -23,7 +23,7 @@ class OverleafClient(object):
         except (FileNotFoundError, EOFError, TypeError):
             self.cookies = requests.cookies.RequestsCookieJar()
             self.csrf_token = ''
-0
+
         if 'overleaf_session2' not in self.cookies.keys() or self.csrf_token == '':
             print('[+] login\n')
             self.login(input('Email: '), getpass.getpass())
