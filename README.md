@@ -4,7 +4,7 @@ A script tool to access overleaf.
 ### Dependencies
 
 ```
-requests, websocket, json, bs4, argparse
+Python3 - requests, websocket, json, bs4, argparse
 ```
 
 ### Usage
