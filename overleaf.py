@@ -170,8 +170,6 @@ class OverleafClient(object):
         # print(self.output_files)
 
     def download(self, project_id, down_filetype, url=''):
-        print('[+] downloading the target file...\n')
-       
         if url != '':
             down_filetype = url.split('?')[0].split('/')[-1].split('.')[1]
             pass
@@ -180,6 +178,8 @@ class OverleafClient(object):
         else:
             url = '%s%s' % (self.homepage, self.output_files[down_filetype])
         
+        print('[+] downloading the target file to ./output.' + down_filetype, '\n')
+
         r = requests.get(url, headers=self.headers, cookies=self.cookies, stream=True)
         
         if r.status_code == 200:
