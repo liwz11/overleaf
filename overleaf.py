@@ -16,6 +16,7 @@ class OverleafClient(object):
             }
     cookies_file = '.ov.cookies.cache'
     csrf_file = '.ov.csrf.cache'
+    output_file = '.ov.output.cache'
 
     def __init__(self):
         try:
@@ -134,7 +135,21 @@ class OverleafClient(object):
         project_info = json.loads(msg.split('6:::1+')[1])
         self.docs = project_info[1]['rootFolder'][0]['docs']        
 
-    def compile(self, project_id, document_id):
+    def compile(self, project_id, document_id, force_compile):
+        outputs_table = {}
+        key = project_id + str(document_id)
+
+        if os.path.exists(self.output_file):
+            with open(self.output_file, 'r') as f:
+                outputs_table = json.loads(f.read())
+            
+            if not force_compile and key in outputs_table.keys():
+                self.outputs = outputs_table[key]
+                if time.time() < self.outputs['expired']:
+                    print('[+] the project and the document were compiled within 10 minutes.')
+                    print('[+] you can force it to be re-compiled with the option \'--compile\'.\n')
+                    return
+        
         '''
         print('[+] loading the project...')
 
@@ -164,10 +179,13 @@ class OverleafClient(object):
         if res['status'] != 'success':
             raise Exception('Compiling failed - ' + res['status'])
         
-        self.output_files = {}
-        for output in res['outputFiles']:
-            self.output_files[output['type']] = output['url']
-        # print(self.output_files)
+        self.outputs = { 'expired': time.time() + 600 }
+        for op in res['outputFiles']:
+            self.outputs[op['type']] = op['url']
+        
+        outputs_table[key] = self.outputs
+        with open(self.output_file, 'w') as f:
+            f.write(json.dumps(outputs_table))
 
     def download(self, project_id, down_filetype, url=''):
         if url != '':
@@ -176,7 +194,8 @@ class OverleafClient(object):
         elif down_filetype == 'zip':
             url = '%s/project/%s/download/zip' % (self.homepage, project_id)
         else:
-            url = '%s%s' % (self.homepage, self.output_files[down_filetype])
+            ftype = down_filetype.split('.')[-1]
+            url = '%s%s' % (self.homepage, self.outputs[ftype])
         
         print('[+] downloading the target file to ./output.' + down_filetype, '\n')
 
@@ -200,13 +219,14 @@ class OverleafClient(object):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='A script tool to access www.overleaf.com.')
-    parser.add_argument('--logout', action='store_true', help='clear cookies and remove csrf token')
-    parser.add_argument('--projects', action='store_true', help='list all available projects')
+    parser.add_argument('--logout', action='store_true', help='clear cookies and remove csrf token, and then exit')
+    parser.add_argument('--projects', action='store_true', help='list all available projects, and then exit')
     parser.add_argument('--project', type=str, default='', help='specify a project id, default \'\'')
-    parser.add_argument('--docs', action='store_true', help='list all .tex documents in the specified project')
+    parser.add_argument('--docs', action='store_true', help='list all .tex documents in the specified project, and then exit')
     parser.add_argument('--doc', type=str, default=None, help='specify a document id, default null(the main document)')
-    parser.add_argument('--down', type=str, default='pdf', help='specify a file type and download the file, default \'pdf\', options: \'pdf\', \'zip\', \'bbl\'')
+    parser.add_argument('--down', type=str, default='pdf', help='specify a file type and download the file, default \'pdf\', options: \'zip\', \'pdf\', \'bbl\', \'aux\', \'out\', \'log\', \'blg\', \'synctex.gz\'')
     parser.add_argument('--url', type=str, default='', help='specify a url to directly download the target file, default \'\'')
+    parser.add_argument('--compile', action='store_true', help='force the project to be re-compiled')
     args = parser.parse_args()
 
     logout = args.logout
@@ -216,6 +236,7 @@ if __name__ == '__main__':
     document_id = args.doc
     down_filetype = args.down
     down_url = args.url
+    force_compile = args.compile
 
     print('')
 
@@ -238,8 +259,8 @@ if __name__ == '__main__':
         os._exit(0)
 
     if project_id == '':
-        print('Please use the option --project to specify a project id.')
-        print('Try "python3 overleaf.py --projects" to list all available projects.\n')
+        print('Please use the option \'--project\' to specify a project id.')
+        print('Try \'python3 overleaf.py --projects\' to list all available projects.\n')
         os._exit(0)
 
     if list_docs:
@@ -251,7 +272,7 @@ if __name__ == '__main__':
         os._exit(0)
     
     if down_filetype != 'zip':
-        client.compile(project_id, document_id)
+        client.compile(project_id, document_id, force_compile)
 
     client.download(project_id, down_filetype)
     

@@ -18,15 +18,15 @@ A script tool to access www.overleaf.com.
 
 optional arguments:
   -h, --help         show this help message and exit
-  --logout           clear cookies and remove csrf token
-  --projects         list all available projects
+  --logout           clear cookies and remove csrf token, and then exit
+  --projects         list all available projects, and then exit
   --project PROJECT  specify a project id, default ''
-  --docs             list all .tex documents in the specified project
+  --docs             list all .tex documents in the specified project, and then exit
   --doc DOC          specify a document id, default null(meaning the main document)
   --down DOWN        specify a file type and download the file, default 'pdf',
-                     options: 'pdf', 'zip', 'bbl'
+                     options: 'zip', 'pdf', 'bbl', 'aux', 'out', 'log', 'blg', 'synctex.gz'
   --url URL          specify a url to directly download the target file, default ''
- 
+  --compile          force the project to be re-compiled
 ```
 
 ### Example 1 - list all available projects
@@ -60,7 +60,7 @@ liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4
 ### Example 3 - download a target file by specifying the project id
 
 ```
-liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4 --down pdf
+liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4
 
 [+] compiling the project...
 
@@ -69,6 +69,17 @@ liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4
 ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 3.69MB    
 
 Total Time: 2.69 s
+
+liwz11@ubuntu:~/overleaf$ python3 overleaf.py --project 5e60cbcf1afbd8000150aec4 --down bbl
+
+[+] this project was compiled within 10 minutes.
+[+] you can force it to be re-compiled with the option '--compile'.
+
+[+] downloading the target file to ./output.bbl 
+
+▇▇▇▇▇▇ 0.01MB    
+
+Total Time: 0.01 s
 
 ```
 
