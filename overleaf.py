@@ -169,7 +169,8 @@ class OverleafClient(object):
         headers = {}
         headers['User-Agent'] = self.headers['User-Agent']
         headers['Referer'] = '%s/project/%s' % (self.homepage, project_id)
-        data = { 'rootDoc_id': document_id, 'draft': False, 'check': 'silent', 'incrementalCompilesEnabled': True, '_csrf': self.csrf_token }
+        #data = { 'rootDoc_id': document_id, 'draft': False, 'check': 'silent', 'incrementalCompilesEnabled': True, '_csrf': self.csrf_token }
+        data = { 'rootDoc_id': document_id, 'check': 'silent', 'incrementalCompilesEnabled': True, '_csrf': self.csrf_token }
         r = requests.post(url, headers=self.headers, data=data, cookies=self.cookies)
         if r.status_code != 200:
             err_msg = 'Status code %d when POST %s.' % (r.status_code, url)
